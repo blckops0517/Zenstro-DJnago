@@ -1,8 +1,14 @@
+
+
+{% load tz %}
+
+
 <footer class="section-footer border-top">
 	<div class="container">
 		<section class="footer-bottom border-top row">
 			<div class="col-md-2">
-				<p class="text-muted"> &copy 2018 Company name </p>
+			<p class="text-muted">&copy; {% now "Y" %} Zenstro</p>
+
 			</div>
 			<div class="col-md-8 text-md-center">
 				<span  class="px-2">info@pixsellz.io</span>
@@ -15,5 +21,9 @@
 				<i class="fab fa-lg fa-cc-mastercard"></i>
 			</div>
 		</section>
+		<hr class="border-secondary mt-4">
+    <div class="text-center small text-muted pb-2">
+      Made with ❤️ by <strong>BlackOps</strong>
+    </div>
 	</div><!-- //container -->
-</footer>
+</footer> 

@@ -58,3 +58,9 @@ $(document).ready(function() {
 }); 
 // jquery end
 
+// close automatic successful registration message
+
+setTimeout(function(){
+    $('#message').fadeOut('slow')
+},4000)
+

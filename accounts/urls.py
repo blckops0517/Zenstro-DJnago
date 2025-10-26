@@ -5,6 +5,11 @@ urlpatterns = [
     path("register/",views.register,name="register"),
     path("login/",views.login,name="login"),
     path("logout/",views.logout,name="logout"),
- 
+    path("dashboard/",views.dashboard,name="dashboard"),
+    path("",views.dashboard,name="dashboard"),                          #accounts/dashboard 404 error fix
     
+    path("activate/<uidb64>/<token>/",views.activate,name='activate'),  #for verify email address
+    path("forgotPassword/",views.forgotPassword,name="forgotPassword"),   #for got password path 
+    path("resetpassword_validate/<uidb64>/<token>/",views.resetpassword_validate,name='resetpassword_validate'),  #RESET PASSWORD PATH
+    path("resetPassword/",views.resetPassword,name="resetPassword"),  
 ]
