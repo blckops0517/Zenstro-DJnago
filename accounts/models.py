@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
 # Create your models here
-# custom admin login 
+# custom admin login xxxxxxxxxxxxxx
 class MyAccountManager(BaseUserManager):
     def create_user(self, first_name, last_name, username, email, password=None):
         if not email:
@@ -21,7 +21,7 @@ class MyAccountManager(BaseUserManager):
         user.set_password(password)
         user.save(using=self._db)
         return user
-    
+    # SUPER ADMIN ONLY HAVE ALL THINGS TO DO
     def create_superuser(self,first_name,last_name,email,username,password):
         user = self.create_user(
             email=self.normalize_email(email),
@@ -37,6 +37,8 @@ class MyAccountManager(BaseUserManager):
         user.save(using=self._db)
         return user 
 
+
+# CUSTMOM MODEL
 class Account(AbstractBaseUser):
     first_name      = models.CharField(max_length=50)
     last_name       = models.CharField(max_length=50)

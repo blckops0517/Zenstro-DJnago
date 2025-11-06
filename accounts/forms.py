@@ -3,6 +3,8 @@ from .models  import Account
 
 # create form for register page
 
+# THIS IS A REGISTRAION FORM 
+
 class RegistrationForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput(attrs={
         "placeholder":"Enter Password",

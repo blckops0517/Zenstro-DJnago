@@ -12,6 +12,11 @@ from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import EmailMessage
 from django.http import HttpResponse
 
+from carts.views import _cart_id
+
+from carts.models import Cart,CartItem
+import requests
+
 # Create your views here.
 # register to zenstro web function
 def register(request):
@@ -70,9 +75,67 @@ def login(request):
         user = auth.authenticate(email=email,password=password)
         
         if user is not None:
+            try:
+                cart = Cart.objects.get(cart_id=_cart_id(request))
+                is_cart_item_exists = CartItem.objects.filter(cart=cart).exists()
+                if is_cart_item_exists:
+                    cart_item = CartItem.objects.filter(cart=cart)
+                    
+                    # GETTING THE PRODUCT VARITAIONS BY CART ID 
+                    product_variation = [] 
+                    for item in cart_item:
+                        variation = item.variations.all()
+                        product_variation.append(list(variation))       # I AM CHANGING TO LIST BEACUSE THE DEFAULT QUAERY 
+                        
+                    # GET THE CART ITEM FROM THE USER TO ACCESS HIS PRODUCT VARITAIONS
+                    cart_item = CartItem.objects.filter(user=user)
+       
+                    ex_var_list = []
+                    id = []
+                    for item in cart_item:
+                        existing_variation = item.variations.all()
+                        ex_var_list.append(list(existing_variation))
+                        id.append(item.id)
+                        
+                    # PRODUCT_VARIATION= [1,2,3,4,6]
+                    # EX_VAR_LIST = [4,6,3,5]
+                    
+                    for pr in product_variation:
+                        if pr in ex_var_list:
+                            index = ex_var_list.index(pr)
+                            item_id = id[index]
+                            item = CartItem.objects.get(id=item_id)
+                            item.quantity += 1
+                            item.user=user
+                            item.save()
+                    else:
+        # Assign all guest items that match this variation
+                        guest_items = CartItem.objects.filter(cart=cart)
+                        for guest_item in guest_items:
+                            variation = list(guest_item.variations.all())
+                            if variation == pr:
+                                guest_item.user = user
+                                guest_item.cart = None  # detach from guest cart
+                                guest_item.save()
+
+            except:
+                pass
             auth.login(request,user)
-            messages.success(request,"You are logged in.")
-            return redirect('dashboard')
+            messages.success(request,"You are now logged in.")
+            url = request.META.get('HTTP_REFERER')    
+            
+            # use requests library
+            #   FOR REDIRECT TO THAT USER AND THAT CART ITEM SEND TO THAT USER
+            try:
+                query = requests.utils.urlparse(url).query  
+                # next = /cart/checkout/
+                params = dict(x.split("=") for x in query.split('&'))
+                if 'next' in params:
+                    nextPage = params['next']
+                    return redirect(nextPage)
+                
+            except:
+                return redirect('dashboard')
         else:
             messages.error(request,"Invalid login credintials")
             return redirect('login')
@@ -80,10 +143,12 @@ def login(request):
 
     return render(request,'accounts/login.html')
 
+
+
 #@login_required is a Django decorator that ensures only logged-in users can access the view.
 @login_required(login_url = 'login')
 
-
+    
 def logout(request):
     auth.logout(request)
     messages.success(request,"You are logged Out")
