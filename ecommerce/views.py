@@ -11,4 +11,4 @@ def home(request):
         
     }
     
-    return render(request,"home.html",context)
+    return render(request,"index.html",context)
