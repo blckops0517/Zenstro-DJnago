@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Product,Variation
+from .models import Product,Variation,ReviewRating
 
 # Register your models here.
 # slug url 
@@ -16,3 +16,6 @@ admin.site.register(Product,ProductAdmin)
 
 # choice for products 
 admin.site.register(Variation,VariationAdmin)
+
+# rating model
+admin.site.register(ReviewRating)

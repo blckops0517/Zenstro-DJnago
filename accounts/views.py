@@ -14,7 +14,7 @@ from django.http import HttpResponse
 
 from carts.views import _cart_id
 
-from carts.models import Cart,CartItem
+from carts.models import Cart,CartItem 
 import requests
 
 # Create your views here.
